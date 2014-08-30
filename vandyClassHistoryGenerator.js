@@ -1,5 +1,11 @@
 semesterTrees = document.getElementsByClassName('careerTermTable');
 
+function cleanString(messy) {
+	messy = messy.replace(/ +(?= )/g,'');
+	messy = messy.replace(/- +/, '-');
+	return messy;
+}
+
 function grabNthParent(orphan, nthParent) {
 	child = orphan;
 	for (j = 0; j < nthParent; j++) 
@@ -21,19 +27,19 @@ function getClassInfo(trClassParent) {
 	classCode = trClassParent.children[0].innerHTML.trim();
 	className = trClassParent.children[1].innerHTML.trim();
 	classProf = trClassParent.children[2].children[0].innerHTML.trim();
-	return [classCode, className, classProf];
+	return [cleanString(classCode), cleanString(className), cleanString(classProf)];
 }
 
 for (i = 0; i < semesterTrees.length; i++) {
-	console.log('loop '+i)
+	//console.log('loop '+i)
 	semester = semesterTrees[i]
 	semesterTitle = getSemesterTitle(semester);
-	classAssortment = getClasses(semester);
-	console.log(semesterTitle);
-	for (k = 0; k < classAssortment.length; k++) {
-		console.log(getClassInfo(classAssortment[k]));
+	classList = getClasses(semester);
+	console.log('\n'+semesterTitle);
+	for (k = 0; k < classList.length; k++) {
+		classInfo = getClassInfo(classList[k]);
+		
+		console.log(classInfo[0]+'    \t'+classInfo[1]+'\t'+classInfo[2]);
 	}
-	console.log(classAssortment.length)
+	//console.log(classList.length)
 }
-
-
