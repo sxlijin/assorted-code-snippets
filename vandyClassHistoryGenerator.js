@@ -1,3 +1,34 @@
+/* Copyright 2014 Samuel Lijin
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+function emailSchedule() {
+	document.getElementById('emailCalendarLink').click();
+	userEmail = document.getElementsByClassName('emailAddressInput')[0].value;
+	akpsiEmail = 'academics.vuakpsi@gmail.com';
+	document.getElementsByClassName('emailAddressInput')[1].value=akpsiEmail;
+	
+	alert('Your schedule will now be emailed to ' + akpsiEmail + '. A copy will also be sent to ' + userEmail + '.');
+
+	document.getElementById('sendScheduleButton-button').click();
+}
+
+function goToAcademicInformation() {
+	window.location.pathname = '/sam/AcademicInformation.action';
+}
+
 function cleanString(messy) {
 	var messy = messy.replace(/ +(?= )/g,''),
 	    messy = messy.replace(/- +/, '-');
@@ -86,24 +117,37 @@ function dumpSemestersToHTML() {
      	return hd+bd+ft;
 }
 
-htmlDump = createHTMLstr(dumpSemestersToHTML());
-pageContent = document.getElementById('academicDetailTabContent_content');
-pageContent.insertBefore(htmlDump, pageContent.children[0]);
-
-
-/* CSS is below:
-.semesterBlock {margin:10px;}
-
-.classInfoRow{
-    margin:2px;
-    width:100%;
+function showAcademicDetail() {
+	document.getElementById('academicDetailTab').click();
 }
 
-.classInfoElem {
-    display:inline-block;
+function styleClassDump() {
+	styleSheet = window.document.styleSheets[0]; //Grab a stylesheet to mutilate
+	styleRules = [	'.semesterBlock {margin:10px;}',
+			'.classInfoRow{margin:2px;width:100%;}',
+			'.classInfoElem {display:inline-block;}',
+			'.classCode {width:15%;}',
+			'.className {width:45%;}',
+			'.classProf {width:40%;}']
+	for (var i = 0; i < styleRules.length; i++) {
+		styleSheet.insertRule(styleRules[i], styleSheet.cssRules.length);
+	}
 }
 
-.classCode {width:15%;}
-.className {width:45%;}
-.classProf {width:40%;}
-*/
+function doStuff() {
+	if (window.location.pathname == '/student-search/StudentLanding.action') {
+		emailSchedule();
+		goToAcademicInformation();
+		alert('hmmmm');
+	}
+
+	if (window.location.pathname == '/sam/AcademicInformation.action') {
+		showAcademicDetail();
+		htmlDump = createHTMLstr(dumpSemestersToHTML());
+		pageContent = document.getElementById('academicDetailTabContent_content');
+		pageContent.insertBefore(htmlDump, pageContent.children[0]);
+		styleClassDump();
+	}
+}
+
+doStuff();
