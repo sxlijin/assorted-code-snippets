@@ -14,14 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+function emailScheduleOnConfirm() {
+	if (confirm('Please click OK to send your current schedule to ' + akpsiEmail + 
+			'. A copy will also be sent to ' + userEmail + '.')) {
+		emailSchedule();
+	}
+}
+
 function emailSchedule() {
 	document.getElementById('emailCalendarLink').click();
-	userEmail = document.getElementsByClassName('emailAddressInput')[0].value;
-	akpsiEmail = 'academics.vuakpsi@gmail.com';
+	var userEmail = document.getElementsByClassName('emailAddressInput')[0].value,
+	    akpsiEmail = 'academics.vuakpsi@gmail.com';
 	document.getElementsByClassName('emailAddressInput')[1].value=akpsiEmail;
 	
-	alert('Your schedule will now be emailed to ' + akpsiEmail + '. A copy will also be sent to ' + userEmail + '.');
-
 	document.getElementById('sendScheduleButton-button').click();
 }
 
@@ -105,9 +110,12 @@ function dumpSemestersToHTML() {
      	    bd = genBody(),
      	    ft ='<div class="ft"></div></div>';
      	function genBody() {
-     		var bdHead = '<div class="bd"><div>someClasses</div>',
-		    bdBody = '',
-     		    bdFoot = '</div>';
+     		var hdText = 'A list of all classes you have taken here at Vanderbilt\
+			      has been generated below. Please email this list to\
+			      academics.vuakpsi@gmail.com.',
+		    bdHead = '<div class="bd"><div>'+hdText+'</div>',
+		    bdBody = '<div class="semesterDumpWrap">',
+     		    bdFoot = '</div></div>';
 		for (var i = 0; i < semesterTrees.length; i++) {
 			var semester = semesterTrees[i];
 			bdBody += dumpSemesterToDivBlock(semester);
@@ -124,7 +132,9 @@ function showAcademicDetail() {
 function styleClassDump() {
 	styleSheet = window.document.styleSheets[0]; //Grab a stylesheet to mutilate
 	styleRules = [	'.semesterBlock {margin:10px;}',
-			'.classInfoRow{margin:2px;width:100%;}',
+		        '.semesterDumpWrap {margin:15px 30px;\
+			   font-family: "Consolas", "Monaco", monospace;}',
+			'.classInfoRow{margin:2px 30px;width:100%;}',
 			'.classInfoElem {display:inline-block;}',
 			'.classCode {width:15%;}',
 			'.className {width:45%;}',
