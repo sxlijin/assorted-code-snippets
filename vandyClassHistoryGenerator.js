@@ -50,12 +50,16 @@ function emailSchedule() {
 //Loads the Academic Record page.
 function goToAcademicInformation() {
 	//Doesn't use .href or .search b/c commodoreId is part of the URL
+	//
 	var stem = window.location.origin,
 	    academicInfoPath = '/sam/AcademicInformation.action',
-	    tail = window.location.search;
+	    tail = window.location.search
+   	    academicInfoLink = document.getElementsByClassName('linksArea')[0].children[0].children[1];
 	tail = tail.replace('commodoreId','cid');
-	window.location.assign(stem+academicInfoPath+tail);
-	alert(stem+academicInfoPath+tail);
+	//window.location.assign(stem+academicInfoPath+tail);
+	academicInfoLink.click();
+	//alert(stem+academicInfoPath+tail);
+	alert(academicInfoLink.href);
 }
 
 //Cleans up whitespace (only the types encountered here!)
