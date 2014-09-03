@@ -14,17 +14,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function emailScheduleOnConfirm() {
+var akpsiEmail = 'academics.vuakpsi@gmail.com';
+
+function emailScheduleOnConfirm(message) {
 	if (confirm('Please click OK to send your current schedule to ' + akpsiEmail + 
-			'. A copy will also be sent to ' + userEmail + '.')) {
+	            '. A copy will also be sent to your Vanderbilt email address.')) {
 		emailSchedule();
 	}
 }
 
 function emailSchedule() {
 	document.getElementById('emailCalendarLink').click();
-	var userEmail = document.getElementsByClassName('emailAddressInput')[0].value,
-	    akpsiEmail = 'academics.vuakpsi@gmail.com';
+	var userEmail = document.getElementsByClassName('emailAddressInput')[0].value;
 	document.getElementsByClassName('emailAddressInput')[1].value=akpsiEmail;
 	
 	document.getElementById('sendScheduleButton-button').click();
@@ -37,7 +38,7 @@ function goToAcademicInformation() {
 function cleanString(messy) {
 	var messy = messy.replace(/ +(?= )/g,''),
 	    messy = messy.replace(/- +/, '-');
-	return messy;
+	return messy.trim();
 }
 
 function grabNthParent(orphan, nthParent) {
@@ -58,9 +59,9 @@ function getClasses(tbodyClassesParent) {
 }
 
 function getClassInfo(trClassParent) {
-	var classCode = trClassParent.children[0].innerHTML.trim(),
-	    className = trClassParent.children[1].innerHTML.trim(),
-	    classProf = trClassParent.children[2].children[0].innerHTML.trim();
+	var classCode = trClassParent.children[0].innerHTML,
+	    className = trClassParent.children[1].innerHTML,
+	    classProf = trClassParent.children[2].children[0].innerHTML;
 	return [cleanString(classCode), cleanString(className), cleanString(classProf)];
 }
 
@@ -104,6 +105,16 @@ function dumpSemesterToDivBlock(semesterTree) {
 	return semesterDivBlock;
 }
 
+function grabNameString() {
+	var studentName = document.getElementsByClassName('studentName')[0].innerHTML;
+	studentName = studentName.replace(/\(.*\)/,'');
+	studentName = studentName.replace(',',', '); 
+	studentName = cleanString(studentName);
+
+	return 'All classes taken by: ' + studentName;
+}
+	
+
 function dumpSemestersToHTML() {
 	var semesterTrees = document.getElementsByClassName('careerTermTable'),
 	    hd = '<div class="roundedDialog"><div class="hd"></div>',
@@ -111,11 +122,12 @@ function dumpSemestersToHTML() {
      	    ft ='<div class="ft"></div></div>';
      	function genBody() {
      		var hdText = 'A list of all classes you have taken here at Vanderbilt\
-			      has been generated below. Please email this list to\
-			      academics.vuakpsi@gmail.com.',
+			      has been generated below. Please email this list to '
+			      + akpsiEmail + '.',
 		    bdHead = '<div class="bd"><div>'+hdText+'</div>',
 		    bdBody = '<div class="semesterDumpWrap">',
      		    bdFoot = '</div></div>';
+		bdBody += '<div>'+grabNameString()+'</div>';
 		for (var i = 0; i < semesterTrees.length; i++) {
 			var semester = semesterTrees[i];
 			bdBody += dumpSemesterToDivBlock(semester);
@@ -146,17 +158,22 @@ function styleClassDump() {
 
 function doStuff() {
 	if (window.location.pathname == '/student-search/StudentLanding.action') {
-		emailSchedule();
-		goToAcademicInformation();
-		alert('hmmmm');
+		emailScheduleOnConfirm();
+		if (confirm('Your schedule has been emailed to ' + akpsiEmail + '. Click OK \
+					to proceed to the next step.')) {
+			goToAcademicInformation();
+		}
 	}
 
 	if (window.location.pathname == '/sam/AcademicInformation.action') {
-		showAcademicDetail();
-		htmlDump = createHTMLstr(dumpSemestersToHTML());
-		pageContent = document.getElementById('academicDetailTabContent_content');
-		pageContent.insertBefore(htmlDump, pageContent.children[0]);
-		styleClassDump();
+		if (document.getElementsByClassName('active')[0].id === "academicDetailTab") {
+			htmlDump = createHTMLstr(dumpSemestersToHTML());
+			pageContent = document.getElementById('academicDetailTabContent_content');
+			pageContent.insertBefore(htmlDump, pageContent.children[0]);
+			styleClassDump();
+		} else {
+			showAcademicDetail();
+		}
 	}
 }
 
