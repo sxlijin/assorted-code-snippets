@@ -16,31 +16,56 @@
 
 var akpsiEmail = 'academics.vuakpsi@gmail.com';
 
-function emailScheduleOnConfirm(message) {
-	if (confirm('Please click OK to send your current schedule to ' + akpsiEmail + 
-	            '. A copy will also be sent to your Vanderbilt email address.')) {
+//Emails user's schedule to $akpsiEmail upon confirmation.
+function emailScheduleOnConfirm() {
+	var confirmMsg = 'Please click OK to send your current schedule to ';
+	confirmMsg += akpsiEmail;
+	confirmMsg += ' and your Vanderbilt email.';
+
+	//Only email schedule if user agrees.
+	if (confirm(confirmMsg)) {
 		emailSchedule();
+	} else {
+		alert('Your schedule will not be sent.');
 	}
 }
 
+//Emails user's schedule to $akpsiEmail, no confirmation
 function emailSchedule() {
+	//Expand email-calendar-to fields to access them.
 	document.getElementById('emailCalendarLink').click();
-	var userEmail = document.getElementsByClassName('emailAddressInput')[0].value;
-	document.getElementsByClassName('emailAddressInput')[1].value=akpsiEmail;
 	
+	//Grab user's email, which is by default the first recipient.
+	var emailFields = document.getElementsByClassName('emailAddressInput'),
+	    userEmail = emailFields[0].value;
+	//Add akpsiEmail to recipients.
+	emailFields[1].value=akpsiEmail;
+	
+	//Submit email recipients.
 	document.getElementById('sendScheduleButton-button').click();
+
+	alert('Your schedule has successfully been emailed.');
 }
 
+//Loads the Academic Record page.
 function goToAcademicInformation() {
-	window.location.pathname = '/sam/AcademicInformation.action';
+	//Doesn't use .href or .search b/c commodoreId is part of the URL
+	var stem = window.location.origin,
+	    academicInfoPath = '/sam/AcademicInformation.action',
+	    tail = window.location.search;
+	tail = tail.replace('commodoreId','cid');
+	window.location.assign(stem+academicInfoPath+tail);
+	alert(stem+academicInfoPath+tail);
 }
 
+//Cleans up whitespace (only the types encountered here!)
 function cleanString(messy) {
 	var messy = messy.replace(/ +(?= )/g,''),
 	    messy = messy.replace(/- +/, '-');
 	return messy.trim();
 }
 
+//Returns the nthParent of orphan (presumes <type element> <type int>).
 function grabNthParent(orphan, nthParent) {
 	var child = orphan;
 	for (var i = 0; i < nthParent; i++) 
@@ -48,23 +73,29 @@ function grabNthParent(orphan, nthParent) {
 	return child;
 }
 
+//Returns "2014 Fall" or whatever - parses the DOM for the semester.
 function getSemesterTitle(classesTable) {
 	var divBigDaddy = grabNthParent(classesTable, 5),
 	    divBigDaddy = divBigDaddy.children[0].children[0];
 	return divBigDaddy.children[1].innerHTML.trim();
 }
 
+//Returns HTMLCollection of classes in a <tbody>
 function getClasses(tbodyClassesParent) {
 	return tbodyClassesParent.children[2].children;
 }
 
+//Returns array containing the class code, name, and professor from the <tr>
 function getClassInfo(trClassParent) {
 	var classCode = trClassParent.children[0].innerHTML,
 	    className = trClassParent.children[1].innerHTML,
 	    classProf = trClassParent.children[2].children[0].innerHTML;
-	return [cleanString(classCode), cleanString(className), cleanString(classProf)];
+	return [cleanString(classCode),
+	       	cleanString(className),
+	       	cleanString(classProf)];
 }
 
+//Takes a string that contains HTML and parses into DocumentFragment
 function createHTMLstr(htmlStr) {
     var frag = document.createDocumentFragment(),
         temp = document.createElement('div');
@@ -75,6 +106,7 @@ function createHTMLstr(htmlStr) {
     return frag;
 }
 
+//Generates <div> using class info returned by getClassInfo()
 function dumpClassInfoToDivRow(classInfoArray) {
 	// Arg in the form [ classCode, className, classProf ], like so:
 	// ["MATH-205A-01", "Multivar Calc/Linear Alg", "Bruce Hughes"]
@@ -87,9 +119,11 @@ function dumpClassInfoToDivRow(classInfoArray) {
 	return classInfoDiv;
 }
 
+//Loops dumpClassInfoToDivRow() to generate dump of all classes in a semester
 function dumpSemesterToDivBlock(semesterTree) {
 	var semesterTitle = getSemesterTitle(semesterTree),
-	    semesterTitleDiv = '<div class="semesterTitle">'+semesterTitle+'</div>',
+	    semesterTitleDiv = '<div class="semesterTitle">'
+		    		+semesterTitle+'</div>',
 	    semesterDivBlockContent = '',
 	    classList = getClasses(semesterTree);
 	//console.log('\n'+semesterTitleDiv);
@@ -105,8 +139,10 @@ function dumpSemesterToDivBlock(semesterTree) {
 	return semesterDivBlock;
 }
 
+//Returns the student's name.
 function grabNameString() {
-	var studentName = document.getElementsByClassName('studentName')[0].innerHTML;
+	var studentElem = document.getElementsByClassName('studentName'),
+	    studentName = studentElem[0].innerHTML;
 	studentName = studentName.replace(/\(.*\)/,'');
 	studentName = studentName.replace(',',', '); 
 	studentName = cleanString(studentName);
@@ -114,24 +150,25 @@ function grabNameString() {
 	return 'All classes taken by: ' + studentName;
 }
 	
-
+//Generates the entire DocumentFragment containing the entire class history
 function dumpSemestersToHTML() {
 	var semesterTrees = document.getElementsByClassName('careerTermTable'),
 	    hd = '<div class="roundedDialog"><div class="hd"></div>',
      	    bd = genBody(),
      	    ft ='<div class="ft"></div></div>';
      	function genBody() {
-     		var hdText = 'A list of all classes you have taken here at Vanderbilt\
-			      has been generated below. Please email this list to '
-			      + akpsiEmail + '.',
+     		var hdText = 'A list of all classes you have taken here at \
+			     Vanderbilt has been generated below. Please \
+			     email this list to ' + akpsiEmail + '.',
 		    bdHead = '<div class="bd"><div>'+hdText+'</div>',
 		    bdBody = '<div class="semesterDumpWrap">',
      		    bdFoot = '</div></div>';
-		bdBody += '<div>'+grabNameString()+'</div>';
+		bdBody += '<hr class="semesterSeparator" /><div>'+grabNameString()+'</div>';
 		for (var i = 0; i < semesterTrees.length; i++) {
 			var semester = semesterTrees[i];
 			bdBody += dumpSemesterToDivBlock(semester);
 		}
+		bdBody += '<hr class="semesterSeparator"/>';
      		return bdHead + bdBody + bdFoot;
      	};
      	return hd+bd+ft;
@@ -142,31 +179,41 @@ function showAcademicDetail() {
 }
 
 function styleClassDump() {
-	styleSheet = window.document.styleSheets[0]; //Grab a stylesheet to mutilate
-	styleRules = [	'.semesterBlock {margin:10px;}',
-		        '.semesterDumpWrap {margin:15px 30px;\
-			   font-family: "Consolas", "Monaco", monospace;}',
-			'.classInfoRow{margin:2px 30px;width:100%;}',
-			'.classInfoElem {display:inline-block;}',
-			'.classCode {width:15%;}',
-			'.className {width:45%;}',
-			'.classProf {width:40%;}']
+	var styleSheet = window.document.styleSheets[0], //Grab a CSS sheet to edit
+	    styleRules = [	'.semesterBlock {margin:10px 0;}',
+		        	'.semesterDumpWrap {margin:15px 30px;\
+				   font-family: Consolas, Monaco, Liberation Mono,\
+			           monospace, sans serif;}',
+				'.classInfoRow{margin:2px 30px;width:100%;}',
+				'.classInfoElem {display:inline-block;}',
+					'.classCode {width:15%;}',
+				'.className {width:45%;}',
+				'.classProf {width:40%;}',
+				'.semesterSeparator {margin:20px 0;}'	];
 	for (var i = 0; i < styleRules.length; i++) {
-		styleSheet.insertRule(styleRules[i], styleSheet.cssRules.length);
+		styleSheet.insertRule(styleRules[i], 
+				      styleSheet.cssRules.length);
 	}
 }
 
 function doStuff() {
-	if (window.location.pathname == '/student-search/StudentLanding.action') {
+	var pathYEShomepage = '/student-search/StudentLanding.action',
+	    pathAcademicInfo = '/sam/AcademicInformation.action';
+
+	//Email schedules & switch from homepage to academic info.
+	if (window.location.pathname === pathYEShomepage) {
 		emailScheduleOnConfirm();
-		if (confirm('Your schedule has been emailed to ' + akpsiEmail + '. Click OK \
-					to proceed to the next step.')) {
+		if (confirm('Click OK to proceed to the next step.')) {
+			alert('qat2t');
 			goToAcademicInformation();
 		}
 	}
-
-	if (window.location.pathname == '/sam/AcademicInformation.action') {
-		if (document.getElementsByClassName('active')[0].id === "academicDetailTab") {
+	
+	//Generate class history summary - needs to be run twice
+	//  once to load Academic Detail, once to parse & dump summary
+	if (window.location.pathname === pathAcademicInfo) {
+		activeTabName = document.getElementsByClassName('active')[0].id;
+		if (activeTabName === "academicDetailTab") {
 			htmlDump = createHTMLstr(dumpSemestersToHTML());
 			pageContent = document.getElementById('academicDetailTabContent_content');
 			pageContent.insertBefore(htmlDump, pageContent.children[0]);
