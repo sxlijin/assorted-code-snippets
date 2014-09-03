@@ -204,7 +204,7 @@ function doStuff() {
 	if (window.location.pathname === pathYEShomepage) {
 		emailScheduleOnConfirm();
 		if (confirm('Click OK to proceed to the next step.')) {
-			alert('qat2t');
+			alert('You will now be taken to your Academic Record.');
 			goToAcademicInformation();
 		}
 	}
