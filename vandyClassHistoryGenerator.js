@@ -111,10 +111,11 @@ function createHTMLstr(htmlStr) {
 }
 
 //Generates <div> using class info returned by getClassInfo()
-function dumpClassInfoToDivRow(classInfoArray) {
+function dumpClassInfoToDivRow(){//classInfoArray) {
 	// Arg in the form [ classCode, className, classProf ], like so:
 	// ["MATH-205A-01", "Multivar Calc/Linear Alg", "Bruce Hughes"]
-	var classCodeDiv = '<div class="classCode classInfoElem">'+classInfoArray[0]+'</div>',
+	var classInfoArray = ['SUBJ-0000-00', 'Generic Class Name', 'Professor Name'],
+	    classCodeDiv = '<div class="classCode classInfoElem">'+classInfoArray[0]+'</div>',
 	    classNameDiv = '<div class="className classInfoElem">'+classInfoArray[1]+'</div>',
 	    classProfDiv = '<div class="classProf classInfoElem">'+classInfoArray[2]+'</div>',
 	    classInfoDiv = '<div class="classInfoRow">';
@@ -125,7 +126,7 @@ function dumpClassInfoToDivRow(classInfoArray) {
 
 //Loops dumpClassInfoToDivRow() to generate dump of all classes in a semester
 function dumpSemesterToDivBlock(semesterTree) {
-	var semesterTitle = getSemesterTitle(semesterTree),
+	var semesterTitle = '20XX Term',//getSemesterTitle(semesterTree),
 	    semesterTitleDiv = '<div class="semesterTitle">'
 		    		+semesterTitle+'</div>',
 	    semesterDivBlockContent = '',
@@ -151,7 +152,7 @@ function grabNameString() {
 	studentName = studentName.replace(',',', '); 
 	studentName = cleanString(studentName);
 
-	return 'All classes taken by: ' + studentName;
+	return 'All classes taken by: Last, First'// + studentName;
 }
 	
 //Generates the entire DocumentFragment containing the entire class history
