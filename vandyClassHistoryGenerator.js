@@ -68,7 +68,7 @@ function goToAcademicInformation() {
    	    academicInfoLink = document.getElementsByClassName('linksArea')[0].children[0].children[1];
 	tail = tail.replace('commodoreId','cid');
 	//window.location.assign(stem+academicInfoPath+tail);
-	academicInfoLink.click();
+	executeClick(academicInfoLink);
 	//alert(stem+academicInfoPath+tail);
 	//alert(academicInfoLink.href);
 }
