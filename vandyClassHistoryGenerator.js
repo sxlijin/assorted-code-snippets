@@ -59,7 +59,7 @@ function goToAcademicInformation() {
 	//window.location.assign(stem+academicInfoPath+tail);
 	academicInfoLink.click();
 	//alert(stem+academicInfoPath+tail);
-	alert(academicInfoLink.href);
+	//alert(academicInfoLink.href);
 }
 
 //Cleans up whitespace (only the types encountered here!)
