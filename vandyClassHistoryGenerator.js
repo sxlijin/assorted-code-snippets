@@ -33,7 +33,7 @@ function emailScheduleOnConfirm() {
 //Emails user's schedule to $akpsiEmail, no confirmation
 function emailSchedule() {
 	//Expand email-calendar-to fields to access them.
-	document.getElementById('emailCalendarLink').click();
+	executeClick(document.getElementById('emailCalendarLink'));
 	
 	//Grab user's email, which is by default the first recipient.
 	var emailFields = document.getElementsByClassName('emailAddressInput'),
@@ -42,10 +42,21 @@ function emailSchedule() {
 	emailFields[1].value=akpsiEmail;
 	
 	//Submit email recipients.
-	document.getElementById('sendScheduleButton-button').click();
+	executeClick(document.getElementById('sendScheduleButton-button'));
 
 	alert('Your schedule has successfully been emailed.');
 }
+
+function executeClick(elem) {
+	if (elem.click) {
+		elem.click();
+	} else if (document.createEvent) {
+		var eventObj = document.createEvent('MouseEvents');
+		eventObj.initEvent('click',true,true);
+		elem.dispatchEvent(eventObj);
+	}
+}
+
 
 //Loads the Academic Record page.
 function goToAcademicInformation() {
@@ -179,7 +190,7 @@ function dumpSemestersToHTML() {
 }
 
 function showAcademicDetail() {
-	document.getElementById('academicDetailTab').click();
+	executeClick(document.getElementById('academicDetailTab'));
 }
 
 function styleClassDump() {
