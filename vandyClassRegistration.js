@@ -19,7 +19,7 @@ for (i = 0; i < classes.length; i++) {
 
     classInfo = classes[i].getElementsByClassName("left")[0].childNodes;
     className = classInfo[1].innerText + " " + classInfo[3].innerText;
-    /console.log(className);
+    //console.log(className);
     //Voodoo magic to grab the contents of the <div> containing the class name.
     
     classSelection = classes[i].getElementsByClassName("classSelection")[0];

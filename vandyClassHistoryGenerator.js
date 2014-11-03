@@ -115,8 +115,9 @@ function emailSchedule() {
 	
 	//Submit email recipients.
 	executeClick(document.getElementById('sendScheduleButton-button'));
-
-	alert('Your schedule has successfully been emailed.');
+	
+	// Removed: UX.
+	// alert('Your schedule has successfully been emailed.');
 }
 
 
@@ -249,10 +250,11 @@ function doStuff() {
 
 	//Email schedules & switch from homepage to academic info.
 	if (window.location.pathname === pathYEShomepage) {
-		emailScheduleOnConfirm();
-		if (confirm('Click OK to proceed to your Academic Record.')) {
+		emailSchedule();
+	// Removed: UX.
+	//	if (confirm('Click OK to proceed to your Academic Record.')) {
 			goToAcademicInformation();
-		}
+	//	}
 	}
 	
 	//Generate class history summary - needs to be run twice
