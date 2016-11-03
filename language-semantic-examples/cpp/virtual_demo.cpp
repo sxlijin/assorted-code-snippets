@@ -3,6 +3,10 @@
 struct Animal {
     virtual ~Animal() {}
 
+    void is() {
+        std::cout << "animal" << std::endl;
+    }
+
     virtual void says() {
         std::cout << "generic" << std::endl;
     }
@@ -16,6 +20,10 @@ struct Animal {
 struct Dog : public Animal {
     virtual ~Dog() {}
 
+    void is() {
+        std::cout << "dog" << std::endl;
+    }
+
     virtual void says() {
         std::cout << "woof" << std::endl;
     }
@@ -24,6 +32,11 @@ struct Dog : public Animal {
 int main() {
     Animal *a = new Animal();
     Animal *b = new Dog();
+
+    a->is();
+    b->is();
+
+    std::cout << std::endl;
 
     a->says();
     b->says();
