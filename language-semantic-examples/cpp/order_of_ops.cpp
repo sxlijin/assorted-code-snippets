@@ -1,6 +1,3 @@
-#include <iostream>
-#include <cmath>
-
 /**
  *
  * I do different things when compiled with GCC and Clang! Details below:
