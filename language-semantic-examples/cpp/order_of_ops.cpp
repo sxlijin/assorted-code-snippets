@@ -43,7 +43,7 @@ struct Scalar {
         return *this;
     }
 
-    void scale(const int &rhs) {
+    void scale(int rhs) {
         data *= rhs;
     }
 };
