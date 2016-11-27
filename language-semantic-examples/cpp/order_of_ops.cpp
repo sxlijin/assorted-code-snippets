@@ -17,10 +17,10 @@
  * Thread model: posix
  * InstalledDir: /usr/bin
  *
- * $ g++ order_of_ops.cpp -o a.out && ./a.out; echo $?
+ * $ g++ -std=c++11 order_of_ops.cpp -o a.out && ./a.out; echo $?
  * 27
  *
- * $ clang++ order_of_ops.cpp -o a.out && ./a.out; echo $?
+ * $ clang++ -std=c++11 order_of_ops.cpp -o a.out && ./a.out; echo $?
  * 81
  *
  */
