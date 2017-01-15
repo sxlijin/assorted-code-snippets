@@ -1,4 +1,23 @@
-//Start by going to https://webapp.mis.vanderbilt.edu/more/SearchClasses!input.action?carouselPanelIndex=1#
+/* 
+
+Usage:
+
+Make a bookmark (bookmarklet) and copy the following into the URL field:
+
+javascript: (function() {    var classReg_js = document.createElement('script');    classReg_js.type = 'text/javascript';    classReg_js.src = 'https://rawgit.com/sxlijin/assorted-code-snippets/master/random-vandy-stuff/vandyClassRegistration.js';    document.body.appendChild(classReg_js);})();
+
+On registration day, refresh the page at https://webapp.mis.vanderbilt.edu/more/SearchClasses!input.action?carouselPanelIndex=1#
+and click the bookmarklet if the "Submit" button is present; if not, refresh again.
+
+Note that this will submit registration for all classes in your cart, so if you don't want to register for something, don't put it in
+your cart.
+
+=====
+
+As a final note, yes, I know this code isn't particularly clean. I got it working my freshman year when I didn't actually know my
+way around Javascript and was mucking around just trying to figure stuff out, and once I got it working, I never revisited it.
+
+*/
 
 //document.getElementById("yui-pg0-0-next-link14").click();
 //Deprecated, original purpose Search Classes -> Class Cart action
